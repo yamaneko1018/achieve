@@ -14,8 +14,8 @@
                )
 end
 
-n = 506
-while n <= 605
+n = 1506
+while n <= 1606
  Blog.create(
      title:"今日も",
      content:"プログラミング",
