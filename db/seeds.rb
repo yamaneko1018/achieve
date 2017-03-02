@@ -14,12 +14,12 @@
                )
 end
 
-n = 506
-while n <= 605
+n = 1
+while n <= 100
  Blog.create(
-     title:"今日も",
-     content:"プログラミング",
-     user_id:n
-    )
-     n = n+1
+      title:"今日も",
+      content:"プログラミング",
+      user_id: n
+     )
+     n = n + 1
 end

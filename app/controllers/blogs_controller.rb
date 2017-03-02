@@ -11,7 +11,7 @@ class BlogsController < ApplicationController
       @blog = Blog.new(blogs_params)
     else
     @blog = Blog.new
-  end
+    end
   end
   
   def create
