@@ -1,9 +1,6 @@
-<p>
-<strong>Title</strong>
-<%= @poem.title %>
-</p>
+<h1>詳細</h1>
 
-<p>
-  <strong>Content</strong>
-  <%= @poem.content %>
-</p>
+<p>タイトル:<%= @poem.title %></p>
+<p>内容:<%= @poem.content %></p>
+
+<p><%= link_to "一覧へ", poems_path %></p>
