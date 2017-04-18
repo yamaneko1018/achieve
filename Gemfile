@@ -52,6 +52,7 @@ gem 'devise'
 
 group :development do
   gem 'letter_opener_web'
+  gem 'dotenv-rails'
 end
 
 gem 'faker'
@@ -59,3 +60,10 @@ gem 'faker'
 gem 'rails_admin'
 gem 'cancan'
 gem 'activeresource'
+
+gem 'omniauth'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+
+gem 'carrierwave'
+gem 'rmagick'
