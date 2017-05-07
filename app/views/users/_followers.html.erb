@@ -1,0 +1,13 @@
+
+<a>フォロー一覧</a>
+<% person.followed_users.each do |user|  %>
+<br>
+ <%= user.name %>
+<% end %>
+<br>
+<br>
+<a>フォロワー一覧</a>
+<% person.followers.each do |user| %>
+<br>
+ <%= user.name %>
+<% end %>

@@ -13,6 +13,17 @@ class CommentsController < ApplicationController
   end
 end
 
+def destroy
+  @comment = Comment.find(params[:id])
+  respond_to do |format|
+  if @comment.destroy
+   format.js{render :index}
+  else
+   format.html{render :index}
+  end
+end
+end
+
 private
 
  def comment_params
