@@ -1,11 +1,25 @@
 <div class="container">
-  <h2>ユーザー</h2>
-  <% @users.each do |user| %>
-      <div class="container-child col-md-2 col-sm-4 col-xs-6 ">
-        <%= profile_img(user) %>
-        <%= user.email %>
-        <%= link_to "詳細", user_path(user.id) %>
-        <%= render 'follow_form', user: user %>
+  <div class="row">
+
+    <h4>ユーザー一覧</h4>
+    <% @users.each do |user| %>
+    <% unless current_user.id == user.id  then %>
+      <div class="container-child col-md-2 col-sm-4 col-xs-6">
+        <div class="follow_box">
+          <div class="follow_inbox">
+
+            <div class="index_profile_image">
+              <%= profile_img(user) %>
+            </div>
+              <%= link_to user.name, user_path(user.id) %>
+              <%= link_to "メッセージ", conversations_path(sender_id: current_user.id, recipient_id: user.id), method: 'post' %>
+            <%= render partial: 'follow_form', locals: {user: user} %>
+          </div>
+
+        </div>
       </div>
-  <% end %>
+    <% end %>
+    <% end %>
+
+  </div>
 </div>
