@@ -2,56 +2,98 @@
 <html>
 <head>
   <title>Achieve</title>
+  <link rel="stylesheets" href="normalize.css">
+  <link rel="stylesheets" href="top.scss">
+  <!--下記meta name="viewport~ を入れないと、web上のデザインがスマホサイズに圧縮された状態になってしまう。-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-  <meta name="viewport" content="width= device-width,initial-scale=1">
+  <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+
+  <!-- 新着メッセージ通知 -->
+  <% if user_signed_in? %>
+    <script>
+      var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+        cluster: 'mt1',
+        encrypted: true
+      });
+      var channel = pusher.subscribe('user_<%= current_user.id %>_channel');
+      channel.bind('comment_created', function(data) {
+        alert(data.message);
+      });
+      channel.bind('notification_created', function(data) {
+        $('#unread_count').html(data.unread_counts);
+      });
+    </script>
+  <% end %>
+
 </head>
 <body>
+
   <header>
-   <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <%= link_to "Achieve", root_path, class: "navbar-brand" %>
-    </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to "お問い合わせ", new_contact_path %></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><%= link_to "ブログ", blogs_path %></li>
-            <li><%= link_to "ユーザー一覧",users_path if user_signed_in? %></li>
-            <li><%= link_to "メッセージ", conversations_path %></li>
-          </ul>
-        </li>
-        <% if user_signed_in? %>
-         <li><%= link_to 'マイページ', edit_user_registration_path %></li>
-         <li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
-        <% else %>
-         <li><%= link_to 'ログイン', new_user_session_path %></li>
-         <li><link_to 'サインアップ', new_user_registration_path %></li>
-        <% end %>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-   </header>
+    <!-- ヘッダーをBootstrapによるDropdown化の為、下記無効化。DIVE05-->
+    <!--<ul>-->
+    <!--    <li><%= link_to "Achieve", root_path %></li>-->
+    <!--    <li><%= link_to "トップページ", root_path %></li>-->
+    <!--    <li><%= link_to "お問い合わせ", new_contact_path %></li>-->
+    <!--    <li><%= link_to "ブログ", blogs_path %></li>-->
+    <!--</ul>-->
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <%= link_to "Achieve", root_path, class: "navbar-brand" %>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><%= link_to "お問い合わせ", new_contact_path %></li>
+          <% if signed_in? %>
+          <li>
+            <%= link_to notifications_index_path, class: "navbar-brand" do %>
+              <i class="fa fa-bell fa-1x"><span id="unread_count"><%= @notifications_count %></span></i>
+            <% end %>
+          </li>
+          <% end %>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "ブログ", blogs_path %></li>
+              <% if user_signed_in? %>
+                <li><%= link_to 'ユーザー一覧', users_path %></li>
+                <li><%= link_to 'マイページ', edit_user_registration_path %></li>
+                <li><%= link_to 'メッセージ', conversations_path %></li>
+                <li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
+                <%= link_to notifications_index_path do %>
+                <i class="fa fa-bell fa-1x"><%= @notifications_count %></i>
+                <% end %>
+              <% else %>
+                <li><%= link_to 'ログイン', new_user_session_path %></li>
+                <li><%= link_to 'サインアップ', new_user_registration_path %></li>
+              <% end %>
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  </header>
 
 <%= yield %>
 
-<footer>
-     <p>運営会社DIVE INTO CODE株式会社</p>
-     <p>© 2015-2016 Copyright DIVE INTO CODE Corp.</p>
-   </footer>
+    <footer>
+        <p>運営会社DIVE INTO CODE株式会社</p>
+        <p>© 2015-2017 Copyright DIVE INTO CODE corp.</p>
+    </footer>
 
 </body>
 </html>
